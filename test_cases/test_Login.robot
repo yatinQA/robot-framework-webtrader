@@ -13,6 +13,6 @@ Library           Selenium2Library
 *** Test Cases ***
 
 Webtrader Login & Switch
-
+      open browser then login
       Switch Virtual Account
-
+      [teardown]    close browser
