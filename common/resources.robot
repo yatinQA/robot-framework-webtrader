@@ -50,14 +50,14 @@ Open browser then login
     Go To   ${HOME URL}
     Sleep                               2
     Click element                       xpath=//*[@id="content"]//button
-    #sleep   5
+    sleep   5
     #Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
     #Click button                        id= cancel
     wait until element is visible        xpath=//*[@id="main-account"]//button      10
     Click element                       xpath=//*[@id="main-account"]//button
     Wait Until Element Is Visible       xpath=//*[contains(text(),'Click to log in with')]   10
     Click button                        xpath=//*[contains(text(),'Log in')]
-    valid login details
+
 
 Valid Login Details
     Input Username	${VALID USER}

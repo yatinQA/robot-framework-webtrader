@@ -11,8 +11,9 @@ Resource          ../common/contractResources.robot
 Library           Selenium2Library
 
 *** Test Cases ***
-Purcahase and verify contract result
+Purchase and verify contract result
     open browser then login
+    valid login details
     Switch Virtual Account
     capture page screenshot
     close all current windows
