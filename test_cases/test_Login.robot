@@ -14,5 +14,5 @@ Library           Selenium2Library
 
 Webtrader Login & Switch
 
-        Switch Virtual Account
+      Switch Virtual Account
 
