@@ -77,7 +77,7 @@ Close all current windows
 
 
     wait until page contains    Workspace
-     Click Element       xpath=//*[contains(text(),'Resources')]
+    Click Element       xpath=//*[contains(text(),'Resources')]
     Click Element       xpath=//*[contains(text(),'Workspace')]
     Sleep       5
     Click Element       xpath=//*[contains(text(),'Close')]
