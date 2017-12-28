@@ -14,5 +14,6 @@ Library           Selenium2Library
 
 Webtrader Login & Switch
       open browser then login
+      valid login details
       Switch Virtual Account
       [teardown]    close browser

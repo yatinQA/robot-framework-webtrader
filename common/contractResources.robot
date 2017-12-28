@@ -34,11 +34,12 @@ Purchase a Contract
     [Arguments]     ${duration_value}   ${duration_unit}
     Set global variable     ${duration_value}
     Set global variable     ${duration_unit}
-    sleep   3
+    sleep   5
     input text      xpath=//INPUT[@class='duration-count']      ${duration_value}
     click element   xpath=//SPAN[@class='ui-selectmenu-text'][text()='ticks']
     click element   xpath=//DIV[contains(text(),'${duration_unit}')]
-    click button    xpath=//button[@rv-on-click="purchase.onclick"]
+    sleep  3
+    click button    xpath=//BUTTON[@rv-on-click='purchase.onclick'][text()='Purchase']
     wait until page contains        Contract Confirmation   10
     wait until element is visible   xpath=//SPAN[text()='Total Cost']/following-sibling::SPAN
     wait until page contains    Final price       20
