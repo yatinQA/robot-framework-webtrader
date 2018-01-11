@@ -12,8 +12,8 @@ Library           Selenium2Library
 #THESE ARE BROWSER VARIBALES
 ${BROWSER}        Chrome 
 ${DELAY}          0
-${VALID USER}     fahad@binary.com
-${VALID PASSWORD}  Silverlight24
+${VALID USER}     yatin@binary.com
+${VALID PASSWORD}  Binary@123
 ${HOME URL}      https://webtrader.binary.com/beta/
 @{chrome_arguments}	--disable-infobars    --headless    --disable-gpu
 
@@ -45,14 +45,14 @@ Grant Permission
     click button  confirm_scopes
 
 Open browser then login
-#    Open Browser    ${HOME URL}    ${BROWSER}
-    Chrome Headless
+    Open Browser    ${HOME URL}    ${BROWSER}
+   # Chrome Headless
     Go To   ${HOME URL}
     Sleep                               2
     Click element                       xpath=//*[@id="content"]//button
-    #sleep   5
-    #Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
-    #Click button                        id= cancel
+    sleep   5
+    Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
+    Click button                        id= cancel
     Click element                       xpath=//*[@id="main-account"]//button
     Wait Until Element Is Visible       xpath=//*[contains(text(),'Click to log in with')]   10
     Click button                        xpath=//*[contains(text(),'Log in')]
