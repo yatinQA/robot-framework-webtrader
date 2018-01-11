@@ -4,7 +4,9 @@ Documentation  This is to test Resources module of WebTrader
 
 
 
-Resource  /Users/yatinbahri/robot-framework-webtrader/common/WT.resources.robot
+Resource          ../common/resources.robot
+Resource          ../common/contractResources.robot
+
 
 Library      Selenium2Library
 Library      String
