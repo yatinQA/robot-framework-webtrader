@@ -5,7 +5,7 @@ Documentation     A resource file with reusable keywords and variables.
 ...               domain specific language. They utilize keywords provided
 ...               by the imported Selenium2Library.
 
-Resource          ../common/WT.resources.robot
+Resource          ../common/resources.robot
 
 Library           Selenium2Library
 
@@ -13,6 +13,7 @@ Library           Selenium2Library
 *** Test Cases ***
 
 Webtrader Login & Switch
-
-        Switch Virtual Account
-
+      open browser then login
+      valid login details
+      Switch Virtual Account
+      [teardown]    close browser

@@ -53,12 +53,15 @@ Open browser then login
     sleep   5
     Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
     Click button                        id= cancel
+    #Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
+    #Click button                        id= cancel
+    wait until element is visible        xpath=//*[@id="main-account"]//button      10
     Click element                       xpath=//*[@id="main-account"]//button
     Wait Until Element Is Visible       xpath=//*[contains(text(),'Click to log in with')]   10
     Click button                        xpath=//*[contains(text(),'Log in')]
 
+
 Valid Login Details
-    Open browser then login
     Input Username	${VALID USER}
     Input Password	${VALID PASSWORD}
     Submit Credentials
@@ -67,8 +70,16 @@ Valid Login Details
     Wait Until Page Contains	         Resources  5
 
 Switch Virtual Account
-    Valid Login Details
     Sleep  10
     Click Element	                        css=div.account-id
     Click Element	                        xpath=//*[contains(text(),'Virtual Account')]
     Wait Until Page Contains	            Resources   10
+
+Close all current windows
+
+
+    wait until page contains    Workspace
+    Click Element       xpath=//*[contains(text(),'Resources')]
+    Click Element       xpath=//*[contains(text(),'Workspace')]
+    Sleep       5
+    Click Element       xpath=//*[contains(text(),'Close')]
