@@ -62,8 +62,8 @@ Navigate to Asset Index pop up
     sleep               3s
     Click Element       id=ui-id-2
     Mouse Out           xpath=//*[@id="nav-menu"]/div/ul/li[3]/a
-    wait until element is visible       xpath=//html/body/div[11]/div[1]/div/a[3]   15
-    Click Element       xpath=/html/body/div[11]/div[1]/div/a[3]
+    wait until element is visible       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']/../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']   15
+    Click Element       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']/../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']
 
 
 Indices pop up validation
