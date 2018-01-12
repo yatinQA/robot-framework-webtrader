@@ -489,12 +489,16 @@ Search for Volatility Indices - Daily Reset Indices
 
 
 Close Asset Index pop up
+        Wait until element is visible       xpath=/html/body/div[11]/div[1]/div/button/span[1]     5s
+        Click Element           xpath=/html/body/div[11]/div[1]/div/button/span[1]
 
 
 *** Test Cases ***
 
 Login to WebTrader
-    Switch Virtual Account
+      open browser then login
+      valid login details
+      Switch Virtual Account
 
 Test Asset Index
     Navigate to Asset Index pop up
