@@ -45,6 +45,10 @@ ${text27}   Volatility 100 Index
 ${text28}   Volatility 50 Index
 ${text29}   Bear Market Index
 ${text30}   Bull Market Index
+${text31}   Commodities
+${text32}   Metals
+${text33}   Volatility Indices
+${text34}   Continuous Indices
 ${actual_index}
 ${expected_index}
 ${count}
@@ -62,12 +66,13 @@ Navigate to Asset Index pop up
     sleep               3s
     Click Element       id=ui-id-2
     Mouse Out           xpath=//*[@id="nav-menu"]/div/ul/li[3]/a
-    wait until element is visible       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']/../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']   15
-    Click Element       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']/../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']
+    wait until element is visible       //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']   5s
+    sleep               5s
+    Click Element       //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']
 
 
 Indices pop up validation
-    wait until element is visible           xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']    15
+    wait until element is visible           xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']    10
     ${Gettext}                       Get Text         xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']
     should be equal                                   ${text}    ${Gettext}
     ${Gettext}                       Get Text       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']
@@ -75,27 +80,27 @@ Indices pop up validation
 
 
 Asset Index list validation
-    Click Element           xpath=//*[@id="ui-id-789-button"]/span[2]
-    wait until element is visible           xpath=//*[@id="ui-id-789-menu"]        10
-    sleep    3s
-    ${count}=       Get matching xpath count          xpath=//*[@id="ui-id-789-menu"]/li
-    #should be equal     ${count}        5
+    wait until element is visible           //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Indices']   10
+    Click Element           //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Indices']
+    sleep    5s
+    wait until element is visible          //*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']    5s
+    ${count}=       Get Element count       xpath://*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li
     ${actual_list}=    create list
     :For    ${i}    IN RANGE    1   ${count}+1
-    \       ${actual_index}=          Get Text        xpath=//*[@id="ui-id-789-menu"]/li[${i}]
+    \       ${actual_index}=          Get Text        xpath=//*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[${i}]
     \       Append to List       ${actual_list}      ${actual_index}
     ${expected_index}       create list             Forex       Indices      OTC Stocks        Commodities     Volatility Indices
     log     ${actual_index}
     lists should be equal    ${actual_list}    ${expected_index}
 
 Sub Indices Validation
-    Click Element           xpath=//*[@id="ui-id-790-button"]/span[2]
-    wait until element is visible       //*[@id="ui-id-790-menu"]
-    sleep           3s
-    ${count}=       Get matching xpath count        xpath=//*[@id="ui-id-790-menu"]/li
+    Click Element           //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']
+    sleep           5s
+    wait until element is visible        xpath://*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul   10s
+    ${count}=       Get matching xpath count        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li
     ${actual_sublist}=     create list
     :For      ${i}  IN RANGE    1   ${count}+1
-    \         ${actual_subindex}=          Get Text        xpath=//*[@id="ui-id-790-menu"]/li[${i}]
+    \         ${actual_subindex}=          Get Text        xpath://*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[${i}]
     \          Append to List       ${actual_sublist}      ${actual_subindex}
     ${expected_subindex}        create list     Asia/Oceania        Europe/Africa       OTC Indices
     log         ${actual_subindex}
@@ -154,8 +159,8 @@ Indices Table validation - Asia/Oceania
 
 Indices Table validation - Europe/Africa
         Wait until element is visible       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']     10s
-        Click Element        xpath=//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']
-        Click Element        xpath=//*[@id="ui-id-790-menu"]/li[2]
+        Click Element         xpath=//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']
+        Click Element         //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[2]
         Wait until element is visible       xpath=//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]       10s
         ${count}=   Get matching xpath count         xpath=//*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=  create list
@@ -170,7 +175,7 @@ Indices Table validation - Europe/Africa
 Indices Table validation - OTC Indices
         Click Element                        xpath=//SPAN[@class='ui-selectmenu-text'][text()='Europe/Africa']
         sleep                                5s
-        Click Element                        xpath=//*[@id="ui-id-790-menu"]/li[3]
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[3]
         Wait until element is visible        xpath=//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     10s
         ${count}=   Get matching xpath count     xpath=//*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -184,16 +189,17 @@ Indices Table validation - OTC Indices
 
 
 Navigate to Forex
-        Wait until element is visible          ui-id-789-button        5s
-        Click Element                          id=ui-id-789-button
-        Click Element                          id=ui-id-791
+        Wait until element is visible          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Indices']        5s
+        Click Element                          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Indices']
+        Click Element                          xpath://*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[1]
+        #Capture Page Screenshot                Forex_navigation.jpeg
 
 
 Forex pop up validation - Major Pairs
-        Wait until element is visible           //*[@id="ui-id-789-button"]/span[2]     5s
-        ${Gettext1}=            Get Text        //*[@id="ui-id-789-button"]/span[2]
+        Wait until element is visible           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']     5s
+        ${Gettext1}=            Get Text        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']
         should be equal         ${Gettext1}       ${text8}
-        ${Gettext2}=            Get Text        //*[@id="ui-id-790-button"]/span[2]
+        ${Gettext2}=            Get Text        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Major Pairs']
         should be equal         ${Gettext2}        ${text9}
 
 
@@ -221,9 +227,9 @@ Search for Forex - Major Pairs
 
 
 Forex pop up validation - Minor Pairs
-        Click Element                        //*[@id="ui-id-790-button"]/span[2]
-        Click Element                        //*[@id="ui-id-790-menu"]/li[2]
-        Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     10s
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Major Pairs']
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[2]
+        Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr     10s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
         :For        ${i}    IN RANGE    1   ${count}+1
@@ -247,8 +253,8 @@ Search for Forex - Minor Pairs
 
 
 Forex pop up validation - Smart FX
-        Click Element                        //*[@id="ui-id-790-button"]/span[2]
-        Click Element                        //*[@id="ui-id-790-menu"]/li[3]
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Minor Pairs']
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[3]
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     10s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -272,13 +278,13 @@ Search for Forex - Smart FX
 
 
 Navigate to OTC Stocks
-        Wait until element is visible          ui-id-789-button        5s
-        Click Element                          id=ui-id-789-button
-        Click Element                          id=ui-id-793
+        Wait until element is visible          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']        5s
+        Click Element                          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']
+        Click Element                          //*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[3]
 
 OTC Stocks pop up validation - Germany
-        Wait until element is visible         //*[@id="ui-id-790-button"]/span[2]   5s
-        ${Gettext}          Get Text            //*[@id="ui-id-790-button"]/span[2]
+        Wait until element is visible           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Germany']   5s
+        ${Gettext}          Get Text            //span[contains(@class, 'ui-selectmenu-text') and text() = 'Germany']
         should be equal         ${Gettext}          Germany
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -304,8 +310,8 @@ Search for OTC Stocks - Germany
 
 
 OTC Stocks pop up validation - India
-        Click Element                        //*[@id="ui-id-790-button"]/span[2]
-        Click Element                        //*[@id="ui-id-790-menu"]/li[2]
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Germany']
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[2]
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     5s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -329,8 +335,8 @@ Search for OTC Stocks - India
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
 OTC Stocks pop up validation - UK
-        Click Element                        //*[@id="ui-id-790-button"]/span[2]
-        Click Element                        //*[@id="ui-id-790-menu"]/li[3]
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'India']
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[3]
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     5s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -355,8 +361,8 @@ Search for OTC Stocks - UK
 
 
 OTC Stocks pop up validation - US
-        Click Element                        //*[@id="ui-id-790-button"]/span[2]
-        Click Element                        //*[@id="ui-id-790-menu"]/li[4]
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'UK']
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[4]
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     5s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -382,12 +388,17 @@ Search for OTC Stocks - US
 
 
 Navigate to Commodities
-        Wait until element is visible          ui-id-789-button        5s
-        Click Element                          id=ui-id-789-button
-        Click Element                          id=ui-id-794
+        Wait until element is visible          //span[contains(@class, 'ui-selectmenu-text') and text() = 'OTC Stocks']        5s
+        Click Element                          //span[contains(@class, 'ui-selectmenu-text') and text() = 'OTC Stocks']
+        Click Element                          //*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[4]
 
 
 Commodities pop up validation - Metals
+        Wait until element is visible           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Commodities']     5s
+        ${Gettext1}=            Get Text        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Commodities']
+        should be equal         ${Gettext1}       ${text31}
+        ${Gettext2}=            Get Text        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Metals']
+        should be equal         ${Gettext2}        ${text32}
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     5s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -412,8 +423,8 @@ Search for Commodities - Metals
 
 
 Commodities pop up validation - Energy
-        Click Element                        //*[@id="ui-id-790-button"]/span[2]
-        Click Element                        //*[@id="ui-id-790-menu"]/li[2]
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Metals']
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[2]
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     5s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -433,11 +444,16 @@ Search for Commodities - Energy
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
 Navigate to Volatility Indices
-        Wait until element is visible          ui-id-789-button        5s
-        Click Element                          id=ui-id-789-button
-        Click Element                          id=ui-id-795
+        Wait until element is visible          //span[contains(@class, 'ui-selectmenu-text') and text() = 'Commodities']        5s
+        Click Element                          //span[contains(@class, 'ui-selectmenu-text') and text() = 'Commodities']
+        Click Element                          //*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[5]
 
 Volatility Indices pop up validation - Continuous Indices
+        Wait until element is visible           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Volatility Indices']     5s
+        ${Gettext1}=            Get Text        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Volatility Indices']
+        should be equal         ${Gettext1}       ${text33}
+        ${Gettext2}=            Get Text        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Continuous Indices']
+        should be equal         ${Gettext2}        ${text34}
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     5s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -463,8 +479,8 @@ Search for Volatility Indices - Continuous Indices
 
 
 Volatility Indices pop up validation - Daily Reset Indices
-        Click Element                        //*[@id="ui-id-790-button"]/span[2]
-        Click Element                        //*[@id="ui-id-790-menu"]/li[2]
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Continuous Indices']
+        Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[2]
         Wait until element is visible        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     5s
         ${count}=   Get matching xpath count     //*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=     create list
@@ -489,8 +505,8 @@ Search for Volatility Indices - Daily Reset Indices
 
 
 Close Asset Index pop up
-        Wait until element is visible       xpath=/html/body/div[11]/div[1]/div/button/span[1]     5s
-        Click Element           xpath=/html/body/div[11]/div[1]/div/button/span[1]
+        Wait until element is visible       xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-button-icon ui-icon custom-icon-close']     5s
+        Click Element                       xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-button-icon ui-icon custom-icon-close']
 
 
 *** Test Cases ***
@@ -553,3 +569,4 @@ Asset Index - Volatility Indices
 
 Close Asset Index
     Close Asset Index pop up
+    [teardown]    close browser
