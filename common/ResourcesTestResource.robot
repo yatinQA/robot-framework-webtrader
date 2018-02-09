@@ -1,21 +1,18 @@
 *** Settings ***
 
-Documentation  This is to test Resources module of WebTrader
+Documentation           This file contains resources for WebTrader Resources module
 
-
-
-Resource          ../common/resources.robot
-Resource          ../common/contractResources.robot
 
 
 Library      Selenium2Library
 Library      String
 Library      Collections
 
+
 *** Variables ***
 
-${text}     Indices
-${text1}    Asia/Oceania
+${text}     Forex
+${text1}    Major Pairs
 ${text2}    Bombay Index
 ${text3}    Japanese Index
 ${text4}    Belgian Index
@@ -57,6 +54,8 @@ ${i}
 ${Gettext}
 ${actual_subindex}
 ${expected_subindex}
+${j}
+
 
 *** Keywords ***
 
@@ -70,20 +69,18 @@ Navigate to Asset Index pop up
     sleep               5s
     Click Element       //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']
 
-
 Indices pop up validation
-    wait until element is visible           xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']    10
-    ${Gettext}                       Get Text         xpath=//SPAN[@class='ui-selectmenu-text'][text()='Indices']
+    wait until element is visible           xpath://SPAN[@class='ui-selectmenu-text'][text()='Forex']    5s
+    ${Gettext}                       Get Text         xpath://SPAN[@class='ui-selectmenu-text'][text()='Forex']
     should be equal                                   ${text}    ${Gettext}
-    ${Gettext}                       Get Text       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']
+    ${Gettext}                       Get Text       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Major Pairs']
     should be equal                                     ${Gettext}      ${text1}
 
-
 Asset Index list validation
-    wait until element is visible           //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Indices']   10
-    Click Element           //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Indices']
+    wait until element is visible           xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Forex']   10s
+    Click Element           xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Forex']
     sleep    5s
-    wait until element is visible          //*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']    5s
+    wait until element is visible          xpath://*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']    5s
     ${count}=       Get Element count       xpath://*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li
     ${actual_list}=    create list
     :For    ${i}    IN RANGE    1   ${count}+1
@@ -92,10 +89,12 @@ Asset Index list validation
     ${expected_index}       create list             Forex       Indices      OTC Stocks        Commodities     Volatility Indices
     log     ${actual_index}
     lists should be equal    ${actual_list}    ${expected_index}
+    Capture Page Screenshot          T1.png
 
 Sub Indices Validation
-    Click Element           //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']
-    sleep           5s
+    Click Element           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']
+    Click Element           //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[2]
+    Click Element           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Asia/Oceania']
     wait until element is visible        xpath://*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul   10s
     ${count}=       Get matching xpath count        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li
     ${actual_sublist}=     create list
@@ -106,7 +105,41 @@ Sub Indices Validation
     log         ${actual_subindex}
     lists should be equal        ${expected_subindex}      ${actual_sublist}
 
+Indices - Asia/Oceania Contract Validation
+        Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Asia/Oceania']
+        Wait until element is visible        //*[@id="DataTables_Table_0"]/thead/tr/th[2]
+        ${count} =  Get matching xpath count    //*[@id="DataTables_Table_0"]/thead/tr/th
+        ${actual_contract}=     create list
+        :For        ${i}    IN RANGE  2    ${count}+1
+        \           ${actual_con}=        Get Text       //*[@id="DataTables_Table_0"]/thead/tr/th[${i}]
+        \           append to list   ${actual_contract}     ${actual_con}
+        log     ${actual_contract}
+        ${expected_contract}        create list     Up/Down  Touch/No Touch  Ends Between/Outside  Stays Between/Goes Outside
+        log     ${expected_contract}
+        lists should be equal       ${actual_contract}        ${expected_contract}
+        #Capture Page Screenshot         T2.png
 
+Indices - Asia/Oceania - Bombay Index
+        ${count} =  Get matching xpath count    //*[@id="DataTables_Table_0"]/thead/tr/th
+        ${actual_duration}=         CREATE LIST
+        :For        ${i}    IN RANGE  2    ${count}+1
+        \           ${contract_duration}=       Get text      //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[${i}]
+        \           append to list     ${actual_duration}        ${contract_duration}
+        log  ${actual_duration}
+        ${expected_duration}       create list     5m - 365d  -  -  -
+        Log     ${expected_duration}
+        lists should be equal       ${actual_duration}         ${expected_duration}
+
+Indices - Asia/Oceania - Hong Kong Index Index
+        ${count} =  Get matching xpath count    //*[@id="DataTables_Table_0"]/thead/tr/th
+        ${actual_duration}=         CREATE LIST
+        :For        ${i}    IN RANGE  2    ${count}+1
+        \           ${contract_duration}=       Get text      //*[@id="DataTables_Table_0"]/tbody/tr[2]/td[${i}]
+        \           append to list     ${actual_duration}        ${contract_duration}
+        log  ${actual_duration}
+        ${expected_duration}       create list     5m - 365d  7d - 365d  7d - 365d  7d - 365d
+        Log     ${expected_duration}
+        lists should be equal       ${actual_duration}         ${expected_duration}
 
 Search for Indices - Asia/Oceania
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
@@ -119,7 +152,6 @@ Search for Indices - Asia/Oceania
         should be equal                     ${Gettext}          ${text3}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
-
 Search for Indices - Europe/Africa
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       Belgian Index
@@ -130,7 +162,6 @@ Search for Indices - Europe/Africa
         ${Gettext}          Get Text        //*[@id="DataTables_Table_0"]/tbody/tr/td[1]
         should be equal                     ${Gettext}          ${text5}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
-
 
 Search for Indices - OTC Indices
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
@@ -143,9 +174,7 @@ Search for Indices - OTC Indices
         should be equal                     ${Gettext}          ${text7}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
-
-
-Indices Table validation - Asia/Oceania
+Indices market validation - Asia/Oceania
         Wait until element is visible       xpath=//*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]     10s
         ${count}=    Get matching xpath count   xpath=//*[@id="DataTables_Table_0"]/tbody/tr
         ${actual_content}=      create list
@@ -155,7 +184,6 @@ Indices Table validation - Asia/Oceania
         ${expected_content}     create list     Bombay Index        Hong Kong Index     Japanese Index      Singapore Index
         log     ${actual_content}
         Lists should be equal        ${expected_content}         ${actual_content}
-
 
 Indices Table validation - Europe/Africa
         Wait until element is visible       xpath=//SPAN[@class='ui-selectmenu-text'][text()='Asia/Oceania']     10s
@@ -171,7 +199,6 @@ Indices Table validation - Europe/Africa
         log     ${actual_content}
         Lists should be equal           ${actual_content}       ${expected_content}
 
-
 Indices Table validation - OTC Indices
         Click Element                        xpath=//SPAN[@class='ui-selectmenu-text'][text()='Europe/Africa']
         sleep                                5s
@@ -182,18 +209,15 @@ Indices Table validation - OTC Indices
         :For        ${i}    IN RANGE    1   ${count}+1
         \           ${actual_OTCcontent}=       Get text        //*[@id="DataTables_Table_0"]/tbody/tr[${i}]/td[1]
         \           Append to list      ${actual_content}      ${actual_OTCcontent}
-        ${expected_content}     create list     Australian OTC Index	Dutch OTC Index     French OTC Index    German OTC Index	Japanese OTC Index	    US OTC Index	Wall Street OTC Index
+        ${expected_content}     create list     Dutch OTC Index		Euro 50 OTC Index     French OTC Index    German OTC Index	Japanese OTC Index	Spanish OTC Index   UK OTC Index   US OTC Index	  Wall Street OTC Index
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
-
 Navigate to Forex
-        Wait until element is visible          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Indices']        5s
-        Click Element                          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Indices']
-        Click Element                          xpath://*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[1]
-        #Capture Page Screenshot                Forex_navigation.jpeg
-
+        Wait until element is visible          //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']        5s
+        Click Element                          //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']
+        #Click Element                          xpath://*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[1]
+        Capture Page Screenshot                Forex_navigation.png
 
 Forex pop up validation - Major Pairs
         Wait until element is visible           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']     5s
@@ -201,7 +225,6 @@ Forex pop up validation - Major Pairs
         should be equal         ${Gettext1}       ${text8}
         ${Gettext2}=            Get Text        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Major Pairs']
         should be equal         ${Gettext2}        ${text9}
-
 
 Forex - Major Pairs validation
         Wait until element is visible                        //*[@id="DataTables_Table_0"]/tbody/tr[1]/td[1]         5s
@@ -225,7 +248,6 @@ Search for Forex - Major Pairs
         should be equal                     ${Gettext}          ${text11}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
-
 Forex pop up validation - Minor Pairs
         Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Major Pairs']
         Click Element                        //*[@class='ui-selectmenu-menu ui-front ui-selectmenu-open']/ul/li[2]
@@ -239,7 +261,6 @@ Forex pop up validation - Minor Pairs
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
 Search for Forex - Minor Pairs
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       GBP/PLN
@@ -250,7 +271,6 @@ Search for Forex - Minor Pairs
         ${Gettext}          Get Text        //*[@id="DataTables_Table_0"]/tbody/tr/td[1]
         should be equal                     ${Gettext}          ${text13}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
-
 
 Forex pop up validation - Smart FX
         Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Minor Pairs']
@@ -276,10 +296,9 @@ Search for Forex - Smart FX
         should be equal                     ${Gettext}          ${text15}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
-
 Navigate to OTC Stocks
-        Wait until element is visible          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']        5s
-        Click Element                          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']
+        Wait until element is visible          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Indices']        5s
+        Click Element                          xpath://span[contains(@class, 'ui-selectmenu-text') and text() = 'Indices']
         Click Element                          //*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[3]
 
 OTC Stocks pop up validation - Germany
@@ -295,7 +314,6 @@ OTC Stocks pop up validation - Germany
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
 Search for OTC Stocks - Germany
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       Deutsche
@@ -306,8 +324,6 @@ Search for OTC Stocks - Germany
         ${Gettext}          Get Text        //*[@id="DataTables_Table_0"]/tbody/tr/td[1]
         should be equal                     ${Gettext}          ${text17}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
-
-
 
 OTC Stocks pop up validation - India
         Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Germany']
@@ -321,7 +337,6 @@ OTC Stocks pop up validation - India
         ${expected_content}     create list     Bharti Airtel	Maruti Suzuki	Reliance Industries	 Tata Steel
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
-
 
 Search for OTC Stocks - India
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
@@ -347,7 +362,6 @@ OTC Stocks pop up validation - UK
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
 Search for OTC Stocks - UK
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       ${text20}
@@ -358,7 +372,6 @@ Search for OTC Stocks - UK
         ${Gettext}          Get Text        //*[@id="DataTables_Table_0"]/tbody/tr/td[1]
         should be equal                     ${Gettext}          ${text21}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
-
 
 OTC Stocks pop up validation - US
         Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'UK']
@@ -373,8 +386,6 @@ OTC Stocks pop up validation - US
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
-
 Search for OTC Stocks - US
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       ${text22}
@@ -386,12 +397,10 @@ Search for OTC Stocks - US
         should be equal                     ${Gettext}          ${text23}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
-
 Navigate to Commodities
         Wait until element is visible          //span[contains(@class, 'ui-selectmenu-text') and text() = 'OTC Stocks']        5s
         Click Element                          //span[contains(@class, 'ui-selectmenu-text') and text() = 'OTC Stocks']
         Click Element                          //*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[4]
-
 
 Commodities pop up validation - Metals
         Wait until element is visible           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Commodities']     5s
@@ -409,7 +418,6 @@ Commodities pop up validation - Metals
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
 Search for Commodities - Metals
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       ${text24}
@@ -420,7 +428,6 @@ Search for Commodities - Metals
         ${Gettext}          Get Text        //*[@id="DataTables_Table_0"]/tbody/tr/td[1]
         should be equal                     ${Gettext}          ${text25}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
-
 
 Commodities pop up validation - Energy
         Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Metals']
@@ -434,7 +441,6 @@ Commodities pop up validation - Energy
         ${expected_content}     create list     Oil/USD
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
-
 
 Search for Commodities - Energy
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
@@ -464,8 +470,6 @@ Volatility Indices pop up validation - Continuous Indices
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
-
 Search for Volatility Indices - Continuous Indices
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       ${text27}
@@ -476,7 +480,6 @@ Search for Volatility Indices - Continuous Indices
         ${Gettext}          Get Text        //*[@id="DataTables_Table_0"]/tbody/tr/td[1]
         should be equal                     ${Gettext}          ${text28}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
-
 
 Volatility Indices pop up validation - Daily Reset Indices
         Click Element                        //span[contains(@class, 'ui-selectmenu-text') and text() = 'Continuous Indices']
@@ -491,7 +494,6 @@ Volatility Indices pop up validation - Daily Reset Indices
         log     ${actual_content}
         Lists should be equal       ${actual_content}       ${expected_content}
 
-
 Search for Volatility Indices - Daily Reset Indices
         Click Element       xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
         Input Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input       ${text29}
@@ -503,70 +505,8 @@ Search for Volatility Indices - Daily Reset Indices
         should be equal                     ${Gettext}          ${text30}
         Clear Element Text          xpath=//*[@id="DataTables_Table_0"]/thead/tr/th[1]/input
 
-
 Close Asset Index pop up
         Wait until element is visible       xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-button-icon ui-icon custom-icon-close']     5s
         Click Element                       xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-button-icon ui-icon custom-icon-close']
+        Capture page screenshot             AssetIndexClose.png
 
-
-*** Test Cases ***
-
-Login to WebTrader
-      open browser then login
-      valid login details
-      Switch Virtual Account
-
-Test Asset Index
-    Navigate to Asset Index pop up
-
-Asset Index - Validation
-   Indices pop up validation
-   Asset Index list validation
-
-Asset Index - Indices
-   Sub Indices Validation
-   Search for Indices - Asia/Oceania
-   Indices Table validation - Asia/Oceania
-   Indices Table validation - Europe/Africa
-   Search for Indices - Europe/Africa
-   Indices Table validation - OTC Indices
-   Search for Indices - OTC Indices
-
-Asset Index - Forex
-    Navigate to Forex
-    Forex pop up validation - Major Pairs
-    Forex - Major Pairs validation
-    Search for Forex - Major Pairs
-    Forex pop up validation - Minor Pairs
-    Search for Forex - Minor Pairs
-    Forex pop up validation - Smart FX
-    Search for Forex - Smart FX
-
-Asset Index - OTC Stocks
-    Navigate to OTC Stocks
-    OTC Stocks pop up validation - Germany
-    Search for OTC Stocks - Germany
-    OTC Stocks pop up validation - India
-    Search for OTC Stocks - India
-    OTC Stocks pop up validation - UK
-    Search for OTC Stocks - UK
-    OTC Stocks pop up validation - US
-    Search for OTC Stocks - US
-
-Asset Index - Commodities
-    Navigate to Commodities
-    Commodities pop up validation - Metals
-    Search for Commodities - Metals
-    Commodities pop up validation - Energy
-    Search for Commodities - Energy
-
-Asset Index - Volatility Indices
-    Navigate to Volatility Indices
-    Volatility Indices pop up validation - Continuous Indices
-    Search for Volatility Indices - Continuous Indices
-    Volatility Indices pop up validation - Daily Reset Indices
-    Search for Volatility Indices - Daily Reset Indices
-
-Close Asset Index
-    Close Asset Index pop up
-    [teardown]    close browser
