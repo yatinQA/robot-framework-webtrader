@@ -29,6 +29,8 @@ log.html
 #Screenshots
 *.png
 *.jpg
+*.jpeg
+
 
 .idea
 .DS_Store
