@@ -45,14 +45,14 @@ Grant Permission
     click button  confirm_scopes
 
 Open browser then login
-    Open Browser    ${HOME URL}    ${BROWSER}
-   # Chrome Headless
+    #Open Browser    ${HOME URL}    ${BROWSER}
+    Chrome Headless
     Go To   ${HOME URL}
     Sleep                               2
     Click element                       xpath=//*[@id="content"]//button
     sleep   5
-    Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
-    Click button                        id= cancel
+    #Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
+    #Click button                        id= cancel
     #Wait Until Element Is Visible       xpath=//*[contains(text(),'Do you want')]   10
     #Click button                        id= cancel
     wait until element is visible        xpath=//*[@id="main-account"]//button      10
