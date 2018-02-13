@@ -80,16 +80,16 @@ Asset Index - Indices
    Indices Table validation - OTC Indices
    Search for Indices - OTC Indices
 
-#Asset Index - OTC Stocks
-#   Navigate to OTC Stocks
-#   OTC Stocks pop up validation - Germany
-#   Search for OTC Stocks - Germany
-#   OTC Stocks pop up validation - India
-#   Search for OTC Stocks - India
-#   OTC Stocks pop up validation - UK
-#   Search for OTC Stocks - UK
-#   OTC Stocks pop up validation - US
-#   Search for OTC Stocks - US
+Asset Index - OTC Stocks
+   Navigate to OTC Stocks
+   OTC Stocks pop up validation - Germany
+   Search for OTC Stocks - Germany
+   OTC Stocks pop up validation - India
+   Search for OTC Stocks - India
+   OTC Stocks pop up validation - UK
+   Search for OTC Stocks - UK
+   OTC Stocks pop up validation - US
+   Search for OTC Stocks - US
 
 Asset Index - Commodities
    Navigate to Commodities
