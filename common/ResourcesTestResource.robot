@@ -66,7 +66,7 @@ Navigate to Asset Index pop up
     Click Element       id=ui-id-2
     Mouse Out           xpath=//*[@id="nav-menu"]/div/ul/li[3]/a
     wait until element is visible       //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']   5s
-    sleep               5s
+    sleep  10
     Click Element       //INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-icon custom-icon-maximize'][text()='maximize'][text()='maximize']
 
 Indices pop up validation
@@ -89,7 +89,7 @@ Asset Index list validation
     ${expected_index}       create list             Forex       Indices      OTC Stocks        Commodities     Volatility Indices
     log     ${actual_index}
     lists should be equal    ${actual_list}    ${expected_index}
-    Capture Page Screenshot          T1.png
+    #Capture Page Screenshot          T1.png
 
 Sub Indices Validation
     Click Element           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']
@@ -217,7 +217,7 @@ Navigate to Forex
         Wait until element is visible          //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']        5s
         Click Element                          //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']
         #Click Element                          xpath://*[@class='ui-menu ui-corner-bottom ui-widget ui-widget-content']/li[1]
-        Capture Page Screenshot                Forex_navigation.png
+        #Capture Page Screenshot                Forex_navigation.png
 
 Forex pop up validation - Major Pairs
         Wait until element is visible           //span[contains(@class, 'ui-selectmenu-text') and text() = 'Forex']     5s
@@ -508,5 +508,5 @@ Search for Volatility Indices - Daily Reset Indices
 Close Asset Index pop up
         Wait until element is visible       xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-button-icon ui-icon custom-icon-close']     5s
         Click Element                       xpath://INPUT[@class='search-input']/../../../../../../..//SPAN[@class='ui-button-icon ui-icon custom-icon-close']
-        Capture page screenshot             AssetIndexClose.png
+        #Capture page screenshot             AssetIndexClose.png
 

@@ -1,6 +1,6 @@
 *** Settings ***
 
-Documentation  This is to test Resources module of WebTrader
+Documentation  This is to test Resources module  - Asset Index of WebTrader for CR broker
 
 
 
@@ -68,13 +68,6 @@ Asset Index - Commodities
    Search for Commodities - Metals
    Commodities pop up validation - Energy
    Search for Commodities - Energy
-
-Asset Index - Volatility Indices
-   Navigate to Volatility Indices
-   Volatility Indices pop up validation - Continuous Indices
-   Search for Volatility Indices - Continuous Indices
-   Volatility Indices pop up validation - Daily Reset Indices
-   Search for Volatility Indices - Daily Reset Indices
 
 Close Asset Index
    Close Asset Index pop up

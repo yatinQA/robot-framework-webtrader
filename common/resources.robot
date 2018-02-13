@@ -78,8 +78,17 @@ Switch Virtual Account
 Close all current windows
 
 
+
     wait until page contains    Workspace
     Click Element       xpath=//*[contains(text(),'Resources')]
     Click Element       xpath=//*[contains(text(),'Workspace')]
     Sleep       5
     Click Element       xpath=//*[contains(text(),'Close')]
+
+
+Reality check pop up
+    Sleep   10s
+    Wait until page contains     Reality check      10s
+    Input Text             (//INPUT[@type='number'])[3]        60
+    Click button           (//BUTTON[@class='button'][text()='Continue Trading'][text()='Continue Trading'])[3]
+    #Capture Page Screenshot    RC1.png
